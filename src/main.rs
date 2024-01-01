@@ -1,10 +1,8 @@
-use router::create_router;
 
-mod router;
-mod todo_handler;
-mod todo_model;
-mod repository;
+mod presentation;
+mod data;
 
+use presentation::router::create_router;
 
 #[tokio::main]
 async fn main() {

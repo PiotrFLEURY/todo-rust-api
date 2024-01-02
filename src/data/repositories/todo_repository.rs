@@ -8,17 +8,17 @@ use postgres::{Client, NoTls};
 
 ///
 /// Get a database connection
-/// 
+///
 pub fn client() -> Client {
     let connection_string = "postgresql://postgres:postgres@127.0.0.1:5432/postgres";
-    return Client::connect(connection_string, NoTls).unwrap();
+    Client::connect(connection_string, NoTls).unwrap()
 }
 
 ///
 /// Find all the todo items from the database
-/// 
+///
 pub fn find_all() -> Vec<Todo> {
-    return std::thread::spawn(move || {
+    std::thread::spawn(move || {
         let mut todos = Vec::new();
         for row in client().query(SELECT_QUERY, &[]).unwrap() {
             let todo = Todo {
@@ -31,14 +31,14 @@ pub fn find_all() -> Vec<Todo> {
         todos
     })
     .join()
-    .unwrap();
+    .unwrap()
 }
 
-/// 
+///
 /// Find a todo item from the database by id
-/// 
+///
 pub fn find_by_id(id: i32) -> Todo {
-    return std::thread::spawn(move || {
+    std::thread::spawn(move || {
         let row = client().query_one(SELECT_BY_ID_QUERY, &[&id]).unwrap();
         Todo {
             id: row.get(0),
@@ -47,14 +47,14 @@ pub fn find_by_id(id: i32) -> Todo {
         }
     })
     .join()
-    .unwrap();
+    .unwrap()
 }
 
 ///
 /// Insert a todo item into the database
-/// 
+///
 pub fn insert_into(title: String, completed: bool) -> Todo {
-    return std::thread::spawn(move || {
+    std::thread::spawn(move || {
         let row = client()
             .query_one(INSERT_QUERY, &[&title, &completed])
             .unwrap();
@@ -65,14 +65,14 @@ pub fn insert_into(title: String, completed: bool) -> Todo {
         }
     })
     .join()
-    .unwrap();
+    .unwrap()
 }
 
-/// 
+///
 /// Update a todo item in the database
-/// 
+///
 pub fn update_where(id: i32, title: String, completed: bool) -> Todo {
-    return std::thread::spawn(move || {
+    std::thread::spawn(move || {
         let row = client()
             .query_one(UPDATE_QUERY, &[&title, &completed, &id])
             .unwrap();
@@ -83,16 +83,16 @@ pub fn update_where(id: i32, title: String, completed: bool) -> Todo {
         }
     })
     .join()
-    .unwrap();
+    .unwrap()
 }
 
 ///
 /// Delete a todo item from the database
-/// 
+///
 pub fn delete_from(id: i32) {
-    return std::thread::spawn(move || {
+    std::thread::spawn(move || {
         client().execute(DELETE_QUERY, &[&id]).unwrap();
     })
     .join()
-    .unwrap();
+    .unwrap()
 }

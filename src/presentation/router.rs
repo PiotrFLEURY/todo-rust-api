@@ -1,14 +1,16 @@
-use axum::{routing::{delete, get, post, put}, Router};
-use crate::presentation::handlers::todo_handler::{get_todos, create_todo, get_todo, update_todo, delete_todo};
-
+use crate::presentation::handlers::todo_handler::{
+    create_todo, delete_todo, get_todo, get_todos, update_todo,
+};
+use axum::{
+    routing::{delete, get, post, put},
+    Router,
+};
 
 pub fn create_router() -> Router {
-
-    return Router::new()
+    Router::new()
         .route("/todos", get(get_todos))
         .route("/todos", post(create_todo))
         .route("/todos/:id", get(get_todo))
         .route("/todos/:id", put(update_todo))
-        .route("/todos/:id", delete(delete_todo));
+        .route("/todos/:id", delete(delete_todo))
 }
-
